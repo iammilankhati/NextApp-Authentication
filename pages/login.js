@@ -6,12 +6,31 @@ import styles from '@/styles/Form.module.css';
 import Image from 'next/image';
 import { HiFingerPrint, HiAtSymbol } from 'react-icons/hi';
 import { useSession, signIn, signOut } from 'next-auth/react';
+import { useFormik } from 'formik';
+import login_validate from './../lib/validate';
 
 export default function Login() {
 	const [show, setShow] = useState(false);
 
 	async function handleGoogleSignin() {
 		signIn('google', { callbackUrl: 'http://localhost:3000' });
+	}
+	async function handleGithubSignin() {
+		signIn('github', { callbackUrl: 'http://localhost:3000' });
+	}
+
+	// be called when the form is submitted
+	const formik = useFormik({
+		initialValues: {
+			email: '',
+			password: '',
+		},
+		validate: login_validate,
+		onSubmit,
+	});
+
+	async function onSubmit(values) {
+		console.log(values);
 	}
 	return (
 		<>
@@ -27,7 +46,7 @@ export default function Login() {
 							Veritatis, atque!
 						</p>
 					</div>
-					<form className='flex flex-col gap-5'>
+					<form className='flex flex-col gap-5' onSubmit={formik.handleSubmit}>
 						<div className={styles.input_group}>
 							<input
 								type='email'
@@ -35,12 +54,18 @@ export default function Login() {
 								id='email'
 								placeholder='Email'
 								className={styles.input_text}
+								{...formik.getFieldProps('email')}
 							/>
 
 							<span className='icon flex items-center px-4'>
 								<HiAtSymbol size={24} />
 							</span>
 						</div>
+						{formik.errors.email && formik.touched.email ? (
+							<span className='text-rose-500'>{formik.errors.email}</span>
+						) : (
+							<></>
+						)}
 						<div className={styles.input_group}>
 							<input
 								type={`${show ? 'text' : 'password'}`}
@@ -48,6 +73,7 @@ export default function Login() {
 								id='password'
 								placeholder='password'
 								className={styles.input_text}
+								{...formik.getFieldProps('password')}
 							/>
 
 							<span
@@ -57,6 +83,12 @@ export default function Login() {
 								<HiFingerPrint size={24} />
 							</span>
 						</div>
+
+						{formik.errors.password && formik.touched.password ? (
+							<span className='text-rose-500'>{formik.errors.password}</span>
+						) : (
+							<></>
+						)}
 						{/* login buttons */}
 						<div className={styles.button}>
 							<button type='submit'>Login</button>
@@ -68,11 +100,20 @@ export default function Login() {
 								onClick={handleGoogleSignin}
 							>
 								Sign In with Google{' '}
-								<Image src='/assets/google.svg' width={20} height={20}></Image>
+								<Image
+									src='/assets/google.svg'
+									width={20}
+									height={20}
+									alt='alt-image'
+								></Image>
 							</button>
 						</div>
 						<div className='input-group'>
-							<button type='button' className={styles.button__custom}>
+							<button
+								type='button'
+								className={styles.button__custom}
+								onClick={handleGithubSignin}
+							>
 								Sign In with Github{' '}
 								<Image src='/assets/github.svg' width={20} height={20}></Image>
 							</button>

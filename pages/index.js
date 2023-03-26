@@ -8,6 +8,10 @@ import { getSession, useSession, signIn, signOut } from 'next-auth/react';
 
 export default function Home() {
 	const { data: session } = useSession();
+
+	function handleSignOut() {
+		signOut();
+	}
 	return (
 		<>
 			<Head>
@@ -17,7 +21,7 @@ export default function Home() {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			{session ? User({ session }) : Guest()}
+			{session ? User({ session, handleSignOut }) : Guest()}
 		</>
 	);
 }
@@ -41,7 +45,7 @@ function Guest() {
 }
 
 //Authorized user
-function User({ session }) {
+function User({ session, handleSignOut }) {
 	return (
 		<main className='container mx-auto text-center py-20'>
 			<h3 className='text-4xl font-bold'>Authorized User Homepage</h3>
@@ -51,7 +55,7 @@ function User({ session }) {
 				<h5>{session.user.email}</h5>
 			</div>
 
-			<div className='flex justify-center'>
+			<div className='flex justify-center' onClick={handleSignOut}>
 				<button className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50'>
 					Sign Out
 				</button>
@@ -69,7 +73,7 @@ function User({ session }) {
 	);
 }
 
-export async function getServerSideProps(req) {
+export async function getServerSideProps({ req }) {
 	const session = await getSession({ req });
 	if (!session) {
 		return {
@@ -80,8 +84,6 @@ export async function getServerSideProps(req) {
 		};
 	}
 	return {
-		props: {
-			session,
-		},
+		props: { session },
 	};
 }
