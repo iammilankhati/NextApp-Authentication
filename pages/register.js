@@ -33,7 +33,7 @@ export default function Register() {
 		};
 
 		console.log(options);
-		await fetch(`api/auth/signup`, options)
+		await fetch(`/api/auth/signup`, options)
 			.then((res) => res.json())
 			.then((data) => {
 				if (data) router.push(`/`);
