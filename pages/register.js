@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import Layout from './../layout/layout';
 import styles from '@/styles/Form.module.css';
-import Image from 'next/image';
 import { HiFingerPrint, HiAtSymbol, HiOutlineUser } from 'react-icons/hi';
 import { useFormik } from 'formik';
 import { register_validate } from '@/lib/validate';
@@ -34,10 +33,10 @@ export default function Register() {
 		};
 
 		console.log(options);
-		await fetch('http://localhost:3000/api/auth/signup', options)
+		await fetch(`${process.env.HOST}api/auth/signup`, options)
 			.then((res) => res.json())
 			.then((data) => {
-				if (data) router.push('http://localhost:3000/');
+				if (data) router.push(`${process.env.HOST}`);
 			});
 	}
 	return (
