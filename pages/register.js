@@ -33,10 +33,10 @@ export default function Register() {
 		};
 
 		console.log(options);
-		await fetch(`${process.env.HOST}api/auth/signup`, options)
+		await fetch(`api/auth/signup`, options)
 			.then((res) => res.json())
 			.then((data) => {
-				if (data) router.push(`${process.env.HOST}`);
+				if (data) router.push(`/`);
 			});
 	}
 	return (

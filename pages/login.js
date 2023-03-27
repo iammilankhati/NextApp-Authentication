@@ -15,10 +15,10 @@ export default function Login() {
 	const router = useRouter();
 
 	async function handleGoogleSignin() {
-		signIn('google', { callbackUrl: `${process.env.HOST}` });
+		signIn('google', { callbackUrl: '/' });
 	}
 	async function handleGithubSignin() {
-		signIn('github', { callbackUrl: `${process.env.HOST}` });
+		signIn('github', { callbackUrl: '/' });
 	}
 
 	// be called when the form is submitted
