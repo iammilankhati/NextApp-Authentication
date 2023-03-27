@@ -63,7 +63,7 @@ function User({ session, handleSignOut }) {
 
 			<div className='flex justify-center'>
 				<Link
-					href='/login'
+					href='/profile'
 					className='mt-5 py-1 px-10 bg-indigo-500 text-gray-50 rounded-md'
 				>
 					Profile

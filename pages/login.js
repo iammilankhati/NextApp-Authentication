@@ -8,9 +8,11 @@ import { HiFingerPrint, HiAtSymbol } from 'react-icons/hi';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useFormik } from 'formik';
 import login_validate from './../lib/validate';
+import { useRouter } from 'next/router';
 
 export default function Login() {
 	const [show, setShow] = useState(false);
+	const router = useRouter();
 
 	async function handleGoogleSignin() {
 		signIn('google', { callbackUrl: 'http://localhost:3000' });
@@ -30,7 +32,18 @@ export default function Login() {
 	});
 
 	async function onSubmit(values) {
-		console.log(values);
+		const status = await signIn('credentials', {
+			redirect: false,
+			email: values.email,
+			password: values.password,
+			callbackUrl: '/',
+		});
+
+		if (status.ok) {
+			router.push(status.url);
+		}
+
+		console.log(status);
 	}
 	return (
 		<>
@@ -115,7 +128,12 @@ export default function Login() {
 								onClick={handleGithubSignin}
 							>
 								Sign In with Github{' '}
-								<Image src='/assets/github.svg' width={20} height={20}></Image>
+								<Image
+									src='/assets/github.svg'
+									width={20}
+									height={20}
+									alt='alt-image'
+								></Image>
 							</button>
 						</div>
 					</form>
